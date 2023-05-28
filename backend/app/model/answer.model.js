@@ -12,7 +12,7 @@ module.exports = (sequelize, Sequelize) => {
                 type: Sequelize.INTEGER(10),
                 allowNull: false
             },
-            answer: {
+            txt: {
                 type: Sequelize.STRING(1000),  // тип данных STRING (в MySQL — VARCHAR)
                 allowNull: false
             }

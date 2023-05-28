@@ -12,5 +12,4 @@ module.exports = (app) => {
 
     app.get('/api/survey/:id', survey.findById);
 
-    // app.get('/api/survey/surveyname/:surveyname', survey.findBySurvayname);
 };

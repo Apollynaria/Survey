@@ -1,9 +1,9 @@
 <template>
     <div class="p-3">
-        <h4>Создание опроса</h4>
-        <form @submit="addSurvey">
+        <h4>Опрос {{  }}</h4>
+        <form @submit="updateSurvey">
             <!-- <input class="form-check-input" type="checkbox" value="" > -->
-            <div>Название опроса</div>
+            <div>Название опроса: {{ this.name }}</div>
             <input class="form-control" type="text" v-model="name" required>
 
             <div v-for="(question, index) in questions" :key="index" class="p-4">
@@ -58,7 +58,9 @@
             </div>
 
             <div class="text-center">
-                <input type="submit" class="btn btn-success mt-2" value="      ДОБАВИТЬ ОПРОС      ">
+                <input type="submit" class="btn btn-success mt-2" value="ИЗМЕНИТЬ ОПРОС">
+                <router-link class="btn btn-primary ms-2 mt-2" to="/surveys">В ГЛАВНОЕ МЕНЮ</router-link>
+                <div @click="deleteSurvey" class="btn btn-danger mt-2 ms-2">УДАЛИТЬ ОПРОС</div>
             </div>
         </form>
         <ul>
@@ -70,7 +72,8 @@
 
 import http from "../http-common"; // подключение объекта, который позволяет отправлять запросы серверу
 export default {
-    name: "AddSurvey", // Имя шаблона
+    name: "SurveyPage", // Имя шаблона
+    props: ['id'],
     data() { // данные компонента (определение переменных)
         return {
             name: "",
@@ -87,23 +90,37 @@ export default {
         };
     },
     methods: { // методы компонента
-        addSurvey(event) {
-            event.preventDefault();
-            const surveyInfo = {
-                name: this.name,
-                questions: this.questions
-            }
-            console.log(surveyInfo)
+
+        getSurvey(){
             http
-                .post("/addSurvey", surveyInfo)
+                .get("/survey/" + this.id)
                 .then(response => {
                     console.log(response.data);
-                    window.location.href = '/listSurveys';
+                    this.name = response.data.survey.name;
+                    this.questions = response.data.survey.questions;
                 })
                 .catch(e => {
                     console.log(e);
                 });
         },
+
+        updateSurvey(event) {
+            event.preventDefault();
+            const surveyInfo = {
+                name: this.name,
+                questions: this.questions
+            }
+            http
+                .post("/updateSurvey/" + this.id, surveyInfo)
+                .then(response => {
+                    console.log(response.data);
+                    window.location.href = '/surveys';
+                })
+                .catch(e => {
+                    console.log(e);
+                });
+        },
+
         checkType(id) {
             if (id == 1) return "Выбор одного ответа";
             if (id == 2) return "Выбор нескольких ответов";
@@ -134,7 +151,22 @@ export default {
 
         deleteQuestion(index) {
             this.questions.splice(index, 1);
-        }
+        },
+
+        deleteSurvey() {
+            http
+                .post("/deleteSurvey/" + this.id)
+                .then(() => {
+                    window.location.href = '/surveys';
+                })
+                .catch(e => {
+                    console.log(e);
+                });
+        },
+    },
+
+    mounted(){
+        this.getSurvey();
     }
 }
 </script>

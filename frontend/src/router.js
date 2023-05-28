@@ -2,6 +2,8 @@ import { createWebHistory, createRouter } from "vue-router";
 // импорт компонентов
 import ListSurveys from "./components/ListSurveys";
 import AddSurvey from "./components/AddSurvey";
+import SurveyUpdate from "./components/SurveyUpdate";
+import SurveyPage from "./components/SurveyPage";
 
 // определяем маршруты
 const routes = [
@@ -20,7 +22,27 @@ const routes = [
         alias: "/addSurvey",
         component: AddSurvey,
         meta: {
-            title: "Добавить опросов"
+            title: "Добавить опрос"
+        }
+    },
+
+    {
+        path: "/updateSurvey/:id", 
+        name: "updateSurvey", 
+        component: SurveyUpdate,
+        props: true,
+        meta: {
+            title: "Редактирование опроса"
+        }
+    },
+
+    {
+        path: "/survey/:id", 
+        name: "survey", 
+        component: SurveyPage,
+        props: true,
+        meta: {
+            title: "Опрос"
         }
     },
 ];
