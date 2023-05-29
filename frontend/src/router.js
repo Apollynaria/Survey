@@ -16,7 +16,8 @@ const routes = [
         alias: "/surveys", // указание дополнительного маршрута
         component: ListSurveys, // компонент, на основании которого будет отрисовываться страница
         meta: {
-            title: "Список опросов"
+            title: "Список опросов",
+            requiredAuth: true
         }
     },
     {
@@ -25,7 +26,8 @@ const routes = [
         alias: "/addSurvey",
         component: AddSurvey,
         meta: {
-            title: "Добавить опрос"
+            title: "Добавить опрос",
+            requiredAuth: true
         }
     },
 
@@ -35,7 +37,8 @@ const routes = [
         component: SurveyUpdate,
         props: true,
         meta: {
-            title: "Редактирование опроса"
+            title: "Редактирование опроса",
+            requiredAuth: true
         }
     },
 
@@ -45,7 +48,8 @@ const routes = [
         component: SurveyPage,
         props: true,
         meta: {
-            title: "Опрос"
+            title: "Опрос",
+            requiredAuth: true
         }
     },
     {
@@ -69,7 +73,8 @@ const routes = [
         name: "ReportsPage",
         component: ReportsPage,
         meta: {
-            title: "Отчеты"
+            title: "Отчеты",
+            requiredAuth: true
         }
     },
 ];

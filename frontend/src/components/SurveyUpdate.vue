@@ -1,66 +1,67 @@
 <template>
     <div class="p-3">
-        <h4>Опрос {{  }}</h4>
         <form @submit="updateSurvey">
-            <!-- <input class="form-check-input" type="checkbox" value="" > -->
-            <div>Название опроса: {{ this.name }}</div>
-            <input class="form-control" type="text" v-model="name" required>
+            <h2 class="text-center mt-2">{{ this.name }}</h2>
+            <div class="middle">
+                <div class="answer-form ms-1" style="max-width: 600pt; font-size: 12pt">Название опроса</div>
+                <input class="form-control question" type="text" v-model="name" required>
+            </div>
 
-            <div v-for="(question, index) in questions" :key="index" class="p-4">
-                <div class="question p-3 rounded">
+            <div v-for="(question, index) in questions" :key="index" class="p-5 middle">
+                <div class="question p-5 rounded answer-form">
                     <div>Вопрос {{ index + 1 }}. {{ checkType(question.type) }}</div>
-
                     <textarea type="text" class="form-control" rows="5" placeholder="Впишите ваш вопрос сюда"
                         v-model="question.text"></textarea>
 
                     <!-- Выбор одного ответа -->
                     <!-- Выбор нескольких ответов -->
                     <div class="mt-2" v-if="question.type != 3">
+                        Варианты ответов:
                         <div class="mt-1" v-for="(answer, index2) in question.answers" :key="index2">
-                            <div class="row">
-                                <div class="col-1">
-                                    {{ index2 + 1 }}
-                                </div>
-                                <div class="col-8">
+                            <div class="d-flex flex-row mt-2">
+                                {{ index2 + 1 + `)` }}
+                                <div class="ms-2 w-100 me-2">
                                     <input class="form-control" type="text" v-model="answer.txt"
                                         placeholder="Впишите ваш ответ сюда">
                                 </div>
-                                <div class="col-3" v-if="question.answers.length > 1">
-                                    <div class="btn btn-danger" @click="deleteAnswer(index, index2)">УДАЛИТЬ</div>
+                                <div class="" v-if="question.answers.length > 1">
+                                    <div class="btn btn-outline-danger" @click="deleteAnswer(index, index2)">
+                                        <font-awesome-icon :icon="['fas', 'trash-can']" /></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="text-center d-flex flex-row mt-2 justify-content-center">
-                            <div class="btn btn-primary me-2" @click="addAnswer(index)">ДОБАВИТЬ ОТВЕТ</div>
-                            <div class="btn btn-danger" @click="deleteQuestion(index)">УДАЛИТЬ ВОПРОС</div>
+                        <div class="text-center d-flex flex-row mt-2 justify-content-between">
+                            <div class="btn btn-outline-primary me-2 mt-2" @click="addAnswer(index)">ДОБАВИТЬ ОТВЕТ</div>
+                            <div class="btn btn-outline-danger mt-2" @click="deleteQuestion(index)">УДАЛИТЬ ВОПРОС</div>
                         </div>
                     </div>
 
                     <!-- Поле -->
-                    <div v-if="question.type == 3" class="text-center mt-2">
-                        <div class="btn btn-danger" @click="deleteQuestion(index)">УДАЛИТЬ ВОПРОС</div>
+                    <div v-if="question.type == 3" class="text-center mt-2 d-flex justify-content-end">
+                        <div class="btn btn-outline-danger mt-2" @click="deleteQuestion(index)">УДАЛИТЬ ВОПРОС</div>
                     </div>
                 </div>
             </div>
 
-            <div class="row mt-2">
-                <div>Вид вопроса</div>
-                <div class="col-9">
-                    <select v-model="typeQuestion" class="form-control mt-2" id="" required>
-                        <option value="1">Выбор одного ответа</option>
-                        <option value="2">Выбор нескольких ответов</option>
-                        <option value="3">Свободный ответ</option>
-                    </select>
-                </div>
-                <div class="col-3">
-                    <div class="btn btn-primary mt-2" @click="addQuestion">ДОБАВИТЬ ВОПРОС</div>
+            <div class="p-5 middle">
+                <div class="question rounded p-5 row">
+                    <div class="middle col-8">
+                        <select v-model="typeQuestion" class="form-control mt-2" id="" required>
+                            <option value="1">Выбор одного ответа</option>
+                            <option value="2">Выбор нескольких ответов</option>
+                            <option value="3">Свободный ответ</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <div class="btn btn-outline-primary mt-2" @click="addQuestion">ДОБАВИТЬ ВОПРОС</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="text-center">
-                <input type="submit" class="btn btn-success mt-2" value="ИЗМЕНИТЬ ОПРОС">
-                <router-link class="btn btn-primary ms-2 mt-2" to="/surveys">В ГЛАВНОЕ МЕНЮ</router-link>
-                <div @click="deleteSurvey" class="btn btn-danger mt-2 ms-2">УДАЛИТЬ ОПРОС</div>
+            <div class="text-center d-flex flex-column align-items-center">
+                <input type="submit" style="font-size: 12pt !important;" class="btn btn-success mt-2 btn-end" value="ИЗМЕНИТЬ ОПРОС">
+                <router-link class="btn btn-primary mt-2 btn-end" to="/surveys">В ГЛАВНОЕ МЕНЮ</router-link>
+                <div @click="deleteSurvey" class="btn btn-danger mt-2 btn-end">УДАЛИТЬ ОПРОС</div>
             </div>
         </form>
         <ul>
@@ -91,7 +92,7 @@ export default {
     },
     methods: { // методы компонента
 
-        getSurvey(){
+        getSurvey() {
             http
                 .get("/survey/" + this.id)
                 .then(response => {
@@ -165,7 +166,7 @@ export default {
         },
     },
 
-    mounted(){
+    mounted() {
         this.getSurvey();
     }
 }
@@ -174,9 +175,5 @@ export default {
 <style>
 .item {
     margin-left: 5px;
-}
-
-.question {
-    background-color: rgb(228, 228, 228);
 }
 </style>

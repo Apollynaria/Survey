@@ -1,20 +1,23 @@
 <template>
     <div>
-        <h4>Список опросов</h4>
-        <router-link v-if="currentUser.isAdmin" class="btn btn-success" to="/addSurvey">Добавить опрос</router-link>
+        <div class="text-center">
+            <h4>Список опросов</h4>
+            <router-link v-if="currentUser.isAdmin" class="btn btn-success" to="/addSurvey">Добавить опрос</router-link>
+        </div>
+
         <!-- <router-link class="item" to="/searchSurveys">Поиск пользователя</router-link> -->
         <ul class="list-group p-3">
             <li class="list-group-item d-flex justify-content-between" v-for="(survey, index) in surveys" :key="index">
-                <router-link :to="{
+                <router-link class="link" :to="{
                         name: 'survey',
                         params: { id: survey.id }
                     }">
                     {{ survey.name }}
                 </router-link>
-                <router-link v-if="currentUser.isAdmin" class="btn btn-primary" :to="{
-                    name: 'updateSurvey',
-                    params: { id: survey.id }
-                }">
+                <router-link v-if="currentUser.isAdmin" class="btn btn-outline-primary" :to="{
+                        name: 'updateSurvey',
+                        params: { id: survey.id }
+                    }">
                     Изменить
                 </router-link>
             </li>
@@ -59,4 +62,9 @@ export default {
 .item {
     margin-left: 5px;
 }
+.link{
+    text-decoration: none;
+    align-self: center;
+}
+
 </style>

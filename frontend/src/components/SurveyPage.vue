@@ -1,18 +1,15 @@
 <template>
     <div class="p-3">
-        <h4>Опрос {{ }}</h4>
         <form @submit="saveAnswers">
-            <div>{{ this.name }}</div>
+            <h2 class="text-center mt-2">{{ this.name }}</h2>
 
-            <div v-for="(question, index) in questions" :key="index" class="p-4">
-                <div class="question p-3 rounded">
-                    <form>
-                        <div>Вопрос {{ index + 1 }}. </div>
-
-                        <span>{{ question.text }}</span>
+            <div v-for="(question, index) in questions" :key="index" class="p-5 middle">
+                <div class="question p-5 rounded">
+                    <form class="answer-form">
+                        <span>{{ index + 1 }}. {{ question.text }}</span>
 
                         <!-- Выбор одного ответа -->
-                        <div v-if="question.type == 1" class="text-center mt-2">
+                        <div v-if="question.type == 1" class="mt-2">
                             <div class="mt-1" v-for="(answer, index2) in question.answers" :key="index2">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="radio" id="radio" :value="answer.txt"
@@ -23,7 +20,7 @@
                         </div>
 
                         <!-- Выбор нескольких ответов -->
-                        <div v-if="question.type == 2" class="text-center mt-2">
+                        <div v-if="question.type == 2" class="mt-2">
                             <div class="mt-1" v-for="(answer, index2) in question.answers" :key="index2">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="checkbox" id="checkbox"
@@ -36,7 +33,7 @@
 
                         <!-- Поле -->
                         <div v-if="question.type == 3" class="text-center mt-2">
-                            <textarea type="text" class="form-control" rows="5" placeholder="Впишите ваш ответ сюда"
+                            <textarea type="text" class="form-control" rows="8" placeholder="Впишите ваш ответ сюда"
                                 v-model="user_answers[index].answers[0].user_ans"></textarea>
                         </div>
                     </form>
@@ -164,6 +161,38 @@ export default {
 }
 
 .question {
-    background-color: rgb(228, 228, 228);
+    background-color: rgb(255, 255, 255);
+    max-width: 600pt;
+    font-size: 12pt;
 }
+
+.middle{
+    text-align: -webkit-center;
+}
+
+textarea{
+    resize: none;
+}
+
+.form-check{
+    text-align: left !important;
+}
+
+.answer-form{
+    text-align: left !important;
+}
+
+.f-14{
+    font-size: 14pt !important;
+}
+
+textarea,
+input {
+    font-size: 12pt !important;
+}
+
+.btn-end{
+    width: 200pt;
+}
+
 </style>

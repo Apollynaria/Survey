@@ -22,7 +22,7 @@
             </div>
 
 
-            <table class="table" >
+            <table class="table mt-2 rounded table-striped" >
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -108,5 +108,9 @@ export default {
 <style>
 .item {
     margin-left: 5px;
+}
+
+.table{
+    background-color: white;
 }
 </style>
