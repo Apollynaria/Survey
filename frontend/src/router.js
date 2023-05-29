@@ -6,7 +6,7 @@ import SurveyUpdate from "./components/SurveyUpdate";
 import SurveyPage from "./components/SurveyPage";
 import Login from "./components/Login";
 import Register from "./components/Register";
-
+import ReportsPage from "./components/Reports";
 
 // определяем маршруты
 const routes = [
@@ -64,6 +64,14 @@ const routes = [
             title: "Регистрация"
         }
     },
+    {
+        path: "/reports",
+        name: "ReportsPage",
+        component: ReportsPage,
+        meta: {
+            title: "Отчеты"
+        }
+    },
 ];
 
 const router = createRouter({
@@ -71,12 +79,33 @@ const router = createRouter({
     routes, // подключаем маршрутизацию
 });
 
+import store from "./store/index";
 // указание заголовка компонентам (тега title), заголовки определены в meta
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     // для тех маршрутов, для которых не определены компоненты, подключается только App.vue
     // поэтому устанавливаем заголовком по умолчанию название "Главная страница"
     document.title = to.meta.title || 'Главная страница';
-    next();
+
+    // проверяем наличие токена и срок его действия
+    const auth = await store.getters["auth/isTokenActive"];
+    if (auth) {
+        return next();
+    }
+
+    // если токена нет или его срок действия истёк, а страница доступна только авторизованному пользователю,
+    // то переходим на страницу входа в систему (ссылка на /login)
+    else if (!auth && to.meta.requiredAuth) {
+        const user = JSON.parse(localStorage.getItem("user"));
+        await store.dispatch("auth/refreshToken", user)
+            .then(() => {
+                return next();
+            })
+            .catch(() => {
+                return next({path: "/login"});
+            });
+        return next({ path: "/login" });
+    }
+    return next();
 });
 
 export default router;

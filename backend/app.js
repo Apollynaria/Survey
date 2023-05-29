@@ -16,7 +16,9 @@ var user = require('./app/route/user.route.js');
 var survey = require('./app/route/survey.route.js');
 var user_answer = require('./app/route/user_answer.route.js');
 var auth = require('./app/route/auth.route.js');
+var question = require('./app/route/question.route.js');
 
+question(app);
 auth(app);
 user_answer(app);
 survey(app);

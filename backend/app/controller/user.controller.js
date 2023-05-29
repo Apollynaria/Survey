@@ -73,7 +73,7 @@ exports.findById = (req, res) => {
 exports.findByUsername = (req, res) => {
     User.findAll({
         where: {
-            username: req.params.username
+            login: req.params.login
         }
     }).then(objects => {
         globalFunctions.sendResult(res, objects);

@@ -22,7 +22,7 @@ exports.register = (req, res) => {
             globalFunctions.sendError(res, err);
         });
 };
-
+// проверка данных пользователя
 exports.login = (req, res) => {
     User.findOne({
         where: {
@@ -48,9 +48,40 @@ exports.login = (req, res) => {
             }
 
             var token = jwt.sign({ id: user.id }, config.secret, {
-                expiresIn: 28800 // 8 часов — время действия токена
+                expiresIn: "1h" // 1 час — время действия токена (можете изменить)
             });
+            console.log(token);
+            var object = {
+                id: user.id,
+                name: user.name,
+                login: user.login,
+                isAdmin: user.isAdmin,
+                accessToken: token
+            };
+            globalFunctions.sendResult(res, object);
+        })
+        .catch(err => {
+            globalFunctions.sendError(res, err);
+        });
+};
 
+// обновление токена jwt (когда срок действия текущего истекает)
+exports.refreshToken = (req, res) => {
+    User.findOne({
+        where: {
+            login: req.body.login
+        }
+    })
+        .then(user => {
+            if (!user) {
+                globalFunctions.sendError(res, "Неверно введенный логин и/или пароль");
+            }
+
+            var token = jwt.sign({ id: user.id }, config.secret, {
+                expiresIn: "1h" // 1 час — время действия токена
+            });
+            console.log("Новый токен");
+            console.log(token);
             var object = {
                 id: user.id,
                 name: user.name,

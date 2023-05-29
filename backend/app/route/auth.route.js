@@ -19,4 +19,7 @@ module.exports = (app) => {
 
     // проверка, что пользователь авторизован
     app.get("/api/userBoard", [authJwt.verifyToken], auth.userBoard);
+
+    // обновление токена jwt (когда срок действия текущего истекает)
+    app.post("/api/refreshToken", auth.refreshToken);
 };

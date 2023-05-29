@@ -31,7 +31,7 @@
                 user: {
                     name: "",
                     login: "",
-                    password: ""
+                    password: "",
                 },
                 loading: false,
                 message: ''
