@@ -4,6 +4,9 @@ import ListSurveys from "./components/ListSurveys";
 import AddSurvey from "./components/AddSurvey";
 import SurveyUpdate from "./components/SurveyUpdate";
 import SurveyPage from "./components/SurveyPage";
+import Login from "./components/Login";
+import Register from "./components/Register";
+
 
 // определяем маршруты
 const routes = [
@@ -43,6 +46,22 @@ const routes = [
         props: true,
         meta: {
             title: "Опрос"
+        }
+    },
+    {
+        path: "/login",
+        name: "login-user",
+        component: Login,
+        meta: {
+            title: "Вход в систему"
+        }
+    },
+    {
+        path: "/register",
+        name: "register-user",
+        component: Register,
+        meta: {
+            title: "Регистрация"
         }
     },
 ];

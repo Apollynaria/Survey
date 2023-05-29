@@ -1,7 +1,7 @@
 <template>
     <div>
         <h4>Список опросов</h4>
-        <router-link class="btn btn-success" to="/addSurvey">Добавить опрос</router-link>
+        <router-link v-if="currentUser.isAdmin" class="btn btn-success" to="/addSurvey">Добавить опрос</router-link>
         <!-- <router-link class="item" to="/searchSurveys">Поиск пользователя</router-link> -->
         <ul class="list-group p-3">
             <li class="list-group-item d-flex justify-content-between" v-for="(survey, index) in surveys" :key="index">
@@ -11,7 +11,7 @@
                     }">
                     {{ survey.name }}
                 </router-link>
-                <router-link class="btn btn-primary" :to="{
+                <router-link v-if="currentUser.isAdmin" class="btn btn-primary" :to="{
                     name: 'updateSurvey',
                     params: { id: survey.id }
                 }">
@@ -31,11 +31,17 @@ export default {
             surveys: []
         };
     },
+    computed: { // вычисляемые свойства
+        currentUser() {
+            return this.$store.state.auth.user;
+        }
+    },
     methods: { // методы компонента
         getSurveys() {
             http
                 .get("/surveys") // обращаемся к серверу для получения списка пользователей
                 .then(response => { // запрос выполнен успешно
+                    console.log(this.currentUser.isAdmin)
                     this.surveys = response.data;
                 })
                 .catch(e => { // запрос выполнен с ошибкой

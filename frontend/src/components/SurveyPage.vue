@@ -66,6 +66,11 @@ export default {
             user_answers: []
         };
     },
+    computed: { // вычисляемые свойства
+        currentUser() {
+            return this.$store.state.auth.user;
+        }
+    },
     methods: {
         getSurvey() {
             http
@@ -107,7 +112,7 @@ export default {
                     let data_one = {
                         id_answer: "",
                         ans: "",
-                        id_user: 1
+                        id_user: this.currentUser.id
                     }
                     if(this.user_answers[i].type == 3){
                         data_one.id_answer = answers[j].id;
@@ -126,7 +131,7 @@ export default {
                 .post("/addUserAnswers", data)
                 .then(response => {
                     console.log(response.data);
-                    // window.location.href = '/listSurveys';
+                    window.location.href = '/listSurveys';
                 })
                 .catch(e => {
                     console.log(e);
