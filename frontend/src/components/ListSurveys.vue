@@ -1,27 +1,30 @@
 <template>
-    <div>
+    <div class="p-3">
         <div class="text-center">
-            <h4>Список опросов</h4>
-            <router-link v-if="currentUser.isAdmin" class="btn btn-success" to="/addSurvey">Добавить опрос</router-link>
+            <h2 class="text-center mt-2">Список опросов</h2>
+            <router-link v-if="currentUser.isAdmin" class="btn btn-success" to="/addSurvey"><font-awesome-icon
+                    :icon="['fas', 'plus']" /> ДОБАВИТЬ ОПРОС</router-link>
         </div>
 
-        <!-- <router-link class="item" to="/searchSurveys">Поиск пользователя</router-link> -->
-        <ul class="list-group p-3">
-            <li class="list-group-item d-flex justify-content-between" v-for="(survey, index) in surveys" :key="index">
-                <router-link class="link" :to="{
-                        name: 'survey',
-                        params: { id: survey.id }
-                    }">
-                    {{ survey.name }}
-                </router-link>
-                <router-link v-if="currentUser.isAdmin" class="btn btn-outline-primary" :to="{
-                        name: 'updateSurvey',
-                        params: { id: survey.id }
-                    }">
-                    Изменить
-                </router-link>
-            </li>
-        </ul>
+        <div class="list-surveys">
+            <ul class="list-group p-3 w-100" >
+                <li class="list-group-item d-flex justify-content-between" v-for="(survey, index) in surveys" :key="index">
+                    <router-link class="link" :to="{
+                            name: 'survey',
+                            params: { id: survey.id }
+                        }">
+                        {{ survey.name }}
+                    </router-link>
+                    <router-link v-if="currentUser.isAdmin" class="btn btn-outline-primary" :to="{
+                            name: 'updateSurvey',
+                            params: { id: survey.id }
+                        }">
+                        <font-awesome-icon :icon="['fas', 'bolt']" /> ИЗМЕНИТЬ
+                    </router-link>
+                </li>
+            </ul>
+        </div>
+
     </div>
 </template>
 
@@ -58,13 +61,24 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .item {
     margin-left: 5px;
 }
-.link{
+
+.link {
     text-decoration: none;
     align-self: center;
+    color: #0a7a5d;
 }
 
+
+.list-group {
+    max-width: 600pt;
+    font-size: 14pt;
+}
+
+.list-surveys{
+    text-align: -webkit-center !important;
+}
 </style>

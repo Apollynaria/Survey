@@ -1,5 +1,5 @@
 <template>
-    <div class="p-3">
+    <div v-if="currentUser" class="p-3">
         <form @submit="saveAnswers">
             <h2 class="text-center mt-2">{{ this.name }}</h2>
 
@@ -163,7 +163,7 @@ export default {
 .question {
     background-color: rgb(255, 255, 255);
     max-width: 600pt;
-    font-size: 12pt;
+    font-size: 14pt;
 }
 
 .middle{

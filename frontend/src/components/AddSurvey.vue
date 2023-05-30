@@ -1,9 +1,9 @@
 <template>
-    <div class="p-3">
+    <div v-if="admin" class="p-3">
         <form @submit="addSurvey">
             <h2 class="text-center mt-2">Создание опроса</h2>
             <div class="middle">
-                <div class="answer-form ms-1" style="max-width: 600pt; font-size: 12pt">Название опроса</div>
+                <div class="answer-form ms-1" style="max-width: 600pt; font-size: 14pt">Название опроса</div>
                 <input class="form-control question" type="text" v-model="name" required>
             </div>
 
@@ -32,14 +32,14 @@
                             </div>
                         </div>
                         <div class="text-center d-flex flex-row mt-2 justify-content-between">
-                            <div class="btn btn-outline-primary me-2 mt-2" @click="addAnswer(index)">ДОБАВИТЬ ОТВЕТ</div>
-                            <div class="btn btn-outline-danger mt-2" @click="deleteQuestion(index)">УДАЛИТЬ ВОПРОС</div>
+                            <div class="btn btn-outline-primary me-2 mt-2" @click="addAnswer(index)"><font-awesome-icon :icon="['fas', 'plus']" /> ДОБАВИТЬ ОТВЕТ</div>
+                            <div class="btn btn-outline-danger mt-2" @click="deleteQuestion(index)"><font-awesome-icon :icon="['fas', 'xmark']" /> УДАЛИТЬ ВОПРОС</div>
                         </div>
                     </div>
 
                     <!-- Поле -->
                     <div v-if="question.type == 3" class="text-center mt-2 d-flex justify-content-end">
-                        <div class="btn btn-outline-danger mt-2" @click="deleteQuestion(index)">УДАЛИТЬ ВОПРОС</div>
+                        <div class="btn btn-outline-danger mt-2" @click="deleteQuestion(index)"><font-awesome-icon :icon="['fas', 'xmark']" /> УДАЛИТЬ ВОПРОС</div>
                     </div>
                 </div>
             </div>
@@ -54,13 +54,13 @@
                         </select>
                     </div>
                     <div class="col-4">
-                        <div class="btn btn-outline-primary mt-2" @click="addQuestion">ДОБАВИТЬ ВОПРОС</div>
+                        <div class="btn btn-outline-primary mt-2" @click="addQuestion"><font-awesome-icon :icon="['fas', 'plus']" /> ДОБАВИТЬ ВОПРОС</div>
                     </div>
                 </div>
             </div>
 
             <div class="text-center">
-                <input type="submit" style="font-size: 12pt !important;" class="btn btn-success mt-2" value="      ДОБАВИТЬ ОПРОС      ">
+                <input type="submit" style="font-size: 12pt !important;" class="btn btn-success mt-2" value="   +   ДОБАВИТЬ ОПРОС      ">
             </div>
         </form>
         <ul>
@@ -85,8 +85,19 @@ export default {
                 type: "",
                 answers: []
             },
-            questions: []
+            questions: [],
+            admin: false,
         };
+    },
+    computed: {
+        currentUser() {
+            return this.$store.state.auth.user;
+        },
+    },
+    created() {
+        if (!this.currentUser.isAdmin) {
+            window.location.href = '/';
+        }
     },
     methods: { // методы компонента
         addSurvey(event) {
@@ -136,6 +147,13 @@ export default {
 
         deleteQuestion(index) {
             this.questions.splice(index, 1);
+        }
+    },
+    mounted() {
+        if (this.currentUser) {
+            if (this.currentUser.isAdmin) {
+                this.admin = true;
+            }
         }
     }
 }

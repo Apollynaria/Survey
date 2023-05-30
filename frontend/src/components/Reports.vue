@@ -1,5 +1,5 @@
 <template>
-    <div class="p-3">
+    <div v-if="admin" class="p-3">
         <h4>Отчеты</h4>
 
         <form>
@@ -58,13 +58,19 @@ export default {
                 survey_id: "",
                 question: "",
             },
-            answers: []
+            answers: [],
+            admin: false,
         };
     },
     computed: {
         currentUser() {
             return this.$store.state.auth.user;
         },
+    },
+    created() {
+        if (!this.currentUser.isAdmin) {
+            window.location.href = '/';
+        }
     },
     methods: {
         getSurveys() {
@@ -100,6 +106,11 @@ export default {
         }
     },
     mounted() {
+        if (this.currentUser) {
+            if (this.currentUser.isAdmin) {
+                this.admin = true;
+            }
+        }
         this.getSurveys();
     },
 };

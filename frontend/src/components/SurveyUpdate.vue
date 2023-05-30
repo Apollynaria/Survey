@@ -1,5 +1,5 @@
 <template>
-    <div class="p-3">
+    <div v-if="admin" class="p-3">
         <form @submit="updateSurvey">
             <h2 class="text-center mt-2">{{ this.name }}</h2>
             <div class="middle">
@@ -26,19 +26,23 @@
                                 </div>
                                 <div class="" v-if="question.answers.length > 1">
                                     <div class="btn btn-outline-danger" @click="deleteAnswer(index, index2)">
-                                        <font-awesome-icon :icon="['fas', 'trash-can']" /></div>
+                                        <font-awesome-icon :icon="['fas', 'trash-can']" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="text-center d-flex flex-row mt-2 justify-content-between">
-                            <div class="btn btn-outline-primary me-2 mt-2" @click="addAnswer(index)">ДОБАВИТЬ ОТВЕТ</div>
-                            <div class="btn btn-outline-danger mt-2" @click="deleteQuestion(index)">УДАЛИТЬ ВОПРОС</div>
+                            <div class="btn btn-outline-primary me-2 mt-2" @click="addAnswer(index)"><font-awesome-icon
+                                    :icon="['fas', 'plus']" /> ДОБАВИТЬ ОТВЕТ</div>
+                            <div class="btn btn-outline-danger mt-2" @click="deleteQuestion(index)"><font-awesome-icon
+                                    :icon="['fas', 'xmark']" /> УДАЛИТЬ ВОПРОС</div>
                         </div>
                     </div>
 
                     <!-- Поле -->
                     <div v-if="question.type == 3" class="text-center mt-2 d-flex justify-content-end">
-                        <div class="btn btn-outline-danger mt-2" @click="deleteQuestion(index)">УДАЛИТЬ ВОПРОС</div>
+                        <div class="btn btn-outline-danger mt-2" @click="deleteQuestion(index)"><font-awesome-icon
+                                :icon="['fas', 'xmark']" /> УДАЛИТЬ ВОПРОС</div>
                     </div>
                 </div>
             </div>
@@ -53,15 +57,19 @@
                         </select>
                     </div>
                     <div class="col-4">
-                        <div class="btn btn-outline-primary mt-2" @click="addQuestion">ДОБАВИТЬ ВОПРОС</div>
+                        <div class="btn btn-outline-primary mt-2" @click="addQuestion"><font-awesome-icon
+                                :icon="['fas', 'plus']" /> ДОБАВИТЬ ВОПРОС</div>
                     </div>
                 </div>
             </div>
 
             <div class="text-center d-flex flex-column align-items-center">
-                <input type="submit" style="font-size: 12pt !important;" class="btn btn-success mt-2 btn-end" value="ИЗМЕНИТЬ ОПРОС">
-                <router-link class="btn btn-primary mt-2 btn-end" to="/surveys">В ГЛАВНОЕ МЕНЮ</router-link>
-                <div @click="deleteSurvey" class="btn btn-danger mt-2 btn-end">УДАЛИТЬ ОПРОС</div>
+                <input type="submit" style="font-size: 12pt !important;" class="btn btn-success mt-2 btn-end"
+                    value="✔ ИЗМЕНИТЬ ОПРОС">
+                <router-link class="btn btn-primary mt-2 btn-end" to="/surveys"><font-awesome-icon
+                        :icon="['fas', 'left-long']" /> В ГЛАВНОЕ МЕНЮ</router-link>
+                <div @click="deleteSurvey" class="btn btn-danger mt-2 btn-end"><font-awesome-icon
+                        :icon="['fas', 'xmark']" /> УДАЛИТЬ ОПРОС</div>
             </div>
         </form>
         <ul>
@@ -87,8 +95,19 @@ export default {
                 type: "",
                 answers: []
             },
-            questions: []
+            questions: [],
+            admin: false,
         };
+    },
+    computed: {
+        currentUser() {
+            return this.$store.state.auth.user;
+        },
+    },
+    created() {
+        if (!this.currentUser.isAdmin) {
+            window.location.href = '/';
+        }
     },
     methods: { // методы компонента
 
@@ -167,13 +186,16 @@ export default {
     },
 
     mounted() {
+        if (this.currentUser) {
+            if (this.currentUser.isAdmin) {
+                this.admin = true;
+            }
+        }
         this.getSurvey();
     }
 }
 </script>
 
-<style>
-.item {
+<style>.item {
     margin-left: 5px;
-}
-</style>
+}</style>
