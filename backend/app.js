@@ -11,7 +11,6 @@ var corsOptions = {
 };
 app.use(cors(corsOptions));
 
-
 var user = require('./app/route/user.route.js');
 var survey = require('./app/route/survey.route.js');
 var user_answer = require('./app/route/user_answer.route.js');

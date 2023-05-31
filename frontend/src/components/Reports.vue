@@ -22,7 +22,7 @@
             </div>
 
 
-            <table class="table mt-2 rounded table-striped" >
+            <table class="table mt-2 rounded table-striped">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -33,20 +33,25 @@
                 </thead>
                 <tbody>
                     <tr v-for="(user_answer, index) in answers" :key="index">
-                        <th scope="row">{{index+1}}</th>
+                        <th scope="row">{{ index + 1 }}</th>
                         <td>{{ user_answer.user.name }}</td>
                         <td>{{ user_answer.user.login }}</td>
-                        <td>{{ user_answer.answer ? user_answer.answer : user_answer.userAnswerAnswer.txt  }}</td>
+                        <td>{{ user_answer.answer ? user_answer.answer : user_answer.userAnswerAnswer.txt }}</td>
                     </tr>
                 </tbody>
             </table>
 
+            <div class="text-center">
+                <div class="btn btn-success" @click="getExcelFile">&nbsp;&nbsp;<font-awesome-icon
+                        :icon="['fas', 'file-excel']" /> Excel&nbsp;&nbsp;</div>
+            </div>
         </form>
     </div>
 </template>
     
 <script>
 import http from "../http-common";
+import axios from 'axios';
 
 export default {
     name: "ReportsPage",
@@ -94,7 +99,7 @@ export default {
                     console.log(e);
                 });
         },
-        getAnswersByQuestion(){
+        getAnswersByQuestion() {
             http
                 .get("/findAllAnswersByQuestion/" + this.obj.question)
                 .then((response) => {
@@ -103,6 +108,59 @@ export default {
                 .catch((e) => {
                     console.log(e);
                 });
+        },
+        async getExcelFile() {
+
+            var arr1 = ['#']
+            var arr2 = ['Имя']
+            var arr3 = ['Логин']
+            var arr4 = ['Ответ']
+
+            for (let i = 0; i < this.answers.length; i++) {
+                arr1.push(i + 1);
+                arr2.push(this.answers[i].user.name);
+                arr3.push(this.answers[i].user.login);
+                if (this.answers[i].answer == '') {
+                    arr4.push(this.answers[i].userAnswerAnswer.txt);
+                } else {
+                    arr4.push(this.answers[i].answer);
+                }
+            }
+            var arr = [];
+
+            arr.push(arr1);
+            arr.push(arr2);
+            arr.push(arr3);
+            arr.push(arr4);
+            console.log(arr);
+            try {
+                const response = await http.post('/saveFile', arr, { responseType: 'blob' });
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'report.xlsx');
+                document.body.appendChild(link);
+                link.click();
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        async downloadFile() {
+            const url = '/api/downloadFile'; // URL для загрузки файла
+            try {
+                const response = await axios.get(url, { responseType: 'blob' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(response.data);
+                link.download = 'file.xlsx'; // Имя файла для сохранения
+
+                // Добавляем ссылку на страницу и эмулируем клик на элементе, чтобы начать загрузку файла
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (error) {
+                console.error(error);
+            }
         }
     },
     mounted() {
@@ -121,7 +179,7 @@ export default {
     margin-left: 5px;
 }
 
-.table{
+.table {
     background-color: white;
 }
 </style>

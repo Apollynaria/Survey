@@ -2,7 +2,7 @@
     <div class="p-3">
         <div class="text-center">
             <h2 class="text-center mt-2">Список опросов</h2>
-            <router-link v-if="currentUser.isAdmin" class="btn btn-success" to="/addSurvey"><font-awesome-icon
+            <router-link v-if="admin" class="btn btn-success" to="/addSurvey"><font-awesome-icon
                     :icon="['fas', 'plus']" /> ДОБАВИТЬ ОПРОС</router-link>
         </div>
 
@@ -15,7 +15,7 @@
                         }">
                         {{ survey.name }}
                     </router-link>
-                    <router-link v-if="currentUser.isAdmin" class="btn btn-outline-primary" :to="{
+                    <router-link v-if="admin" class="btn btn-outline-primary" :to="{
                             name: 'updateSurvey',
                             params: { id: survey.id }
                         }">
@@ -34,7 +34,8 @@ export default {
     name: "ListSurveys", // Имя шаблона
     data() { // данные компонента (определение переменных)
         return {
-            surveys: []
+            surveys: [],
+            admin: false,
         };
     },
     computed: { // вычисляемые свойства
@@ -56,6 +57,11 @@ export default {
         }
     },
     mounted() { // загружаем данные пользователей. Обработчик mounted() вызывается после монтирования экземпляра шаблона
+        if (this.currentUser) {
+            if (this.currentUser.isAdmin) {
+                this.admin = true;
+            }
+        }
         this.getSurveys();
     }
 }

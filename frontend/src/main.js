@@ -4,6 +4,7 @@ import router from './router' // Маршрутизация
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.js'
 
+
 import { library } from '@fortawesome/fontawesome-svg-core'
 import store from './store';
 
