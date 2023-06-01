@@ -11,14 +11,14 @@ module.exports = (app) => {
     app.post('/api/addUser', user.create);
 
     // Обновление данных пользователя по id
-    app.post('/api/updateUser/:id', user.update);
+    app.post('/api/updateUser/:id', [authJwt.check], user.update);
 
     // Удаление данных пользователя по id
-    app.post('/api/deleteUser/:id', user.delete);
+    app.post('/api/deleteUser/:id', [authJwt.check], user.delete);
 
     // Получение пользователя по id
-    app.get('/api/user/:id', user.findById);
+    app.get('/api/user/:id', [authJwt.verifyToken], user.findById);
 
     // Получение пользователя по login
-    app.get('/api/user/login/:login', user.findByUsername);
+    app.get('/api/user/login/:login', [authJwt.verifyToken], user.findByUsername);
 };

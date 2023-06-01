@@ -1,27 +1,28 @@
+var { authJwt } = require("../middleware");
+
 module.exports = (app) => {
 
     const survey = require('../controller/survey.controller');
 
-    app.get('/api/surveys', survey.findAll);
+    app.get('/api/surveys', [authJwt.verifyToken], survey.findAll);
 
-    app.post('/api/addSurvey', survey.create);
+    app.post('/api/addSurvey', [authJwt.check], survey.create);
 
-    app.post('/api/updateSurvey/:id', survey.update);
+    app.post('/api/updateSurvey/:id', [authJwt.check], survey.update);
 
-    app.post('/api/deleteSurvey/:id', survey.delete);
+    app.post('/api/deleteSurvey/:id', [authJwt.check], survey.delete);
 
-    app.get('/api/survey/:id', survey.findById);
+    app.get('/api/survey/:id', [authJwt.verifyToken], survey.findById);
 
     const ExcelJS = require('exceljs');
 
-    app.post('/api/saveFile', (req, res) => {
+    app.post('/api/saveFile', [authJwt.check], (req, res) => {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Sheet 1');
 
         // Добавляем данные в лист
         const data = req.body;
 
-        console.log(data)
         for (let i = 0; i < data[0].length; i++) {
             var arr = []
             for (let j = 0; j < data.length; j++) {
@@ -44,7 +45,7 @@ module.exports = (app) => {
             });
     });
 
-    app.get('/api/downloadFile', (req, res) => {
+    app.get('/api/downloadFile', [authJwt.check], (req, res) => {
         const filePath = 'report.xlsx'; // Путь к файлу на сервере
         res.download(filePath); // Отправляем файл клиенту
     });

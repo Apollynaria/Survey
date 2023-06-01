@@ -4,7 +4,7 @@
 
         <form>
             <div>Опрос</div>
-            <select class="form-select" v-model="obj.survey" required @change="getQuestionsForSurvey">
+            <select class="form-select" v-model="obj.survey" id="sel" required @change="getQuestionsForSurvey">
                 <option value="" selected disabled hidden>Название опроса</option>
                 <option v-for="(survey, index) in surveys" :key="index" :value="survey.id">
                     {{ survey.name }}
@@ -65,6 +65,7 @@ export default {
             },
             answers: [],
             admin: false,
+            allAnswers: [],
         };
     },
     computed: {
@@ -109,30 +110,51 @@ export default {
                     console.log(e);
                 });
         },
+
         async getExcelFile() {
 
-            var arr1 = ['#']
-            var arr2 = ['Имя']
-            var arr3 = ['Логин']
-            var arr4 = ['Ответ']
+            var arr1 = [this.surveys.find(survey => survey.id === this.obj.survey).name,'№']
+            var arr2 = ['','Имя']
+            var arr3 = ['','Логин']
+            var arr4 = ['','Ответ']
 
-            for (let i = 0; i < this.answers.length; i++) {
-                arr1.push(i + 1);
-                arr2.push(this.answers[i].user.name);
-                arr3.push(this.answers[i].user.login);
-                if (this.answers[i].answer == '') {
-                    arr4.push(this.answers[i].userAnswerAnswer.txt);
-                } else {
-                    arr4.push(this.answers[i].answer);
-                }
+            const requests = [];
+
+            for (let j = 0; j < this.questions.length; j++) {
+                const request = http
+                    .get("/findAllAnswersByQuestion/" + this.questions[j].id)
+                    .then((response) => {
+                        this.allAnswers = response.data;
+                        arr1.push(this.questions[j].text);
+                        arr2.push('');
+                        arr3.push('');
+                        arr4.push('')
+                        for (let i = 0; i < this.allAnswers.length; i++) {
+                            arr1.push(i + 1);
+                            arr2.push(this.allAnswers[i].user.name);
+                            arr3.push(this.allAnswers[i].user.login);
+                            if (this.allAnswers[i].answer == '') {
+                                arr4.push(this.allAnswers[i].userAnswerAnswer.txt);
+                            } else {
+                                arr4.push(this.allAnswers[i].answer);
+                            }
+                        }
+                    })
+                    .catch((e) => {
+                        console.log(e);
+                    });
+                requests.push(request);
             }
-            var arr = [];
 
+            await Promise.all(requests); // Wait for all requests to complete
+
+            var arr = [];
             arr.push(arr1);
             arr.push(arr2);
             arr.push(arr3);
             arr.push(arr4);
             console.log(arr);
+
             try {
                 const response = await http.post('/saveFile', arr, { responseType: 'blob' });
                 const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -144,8 +166,8 @@ export default {
             } catch (error) {
                 console.log(error);
             }
-
         },
+
         async downloadFile() {
             const url = '/api/downloadFile'; // URL для загрузки файла
             try {
